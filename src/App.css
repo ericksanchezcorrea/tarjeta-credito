@@ -1,38 +1,192 @@
-.App {
-  text-align: center;
+body{
+  font-family: 'Space Grotesk', sans-serif;
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.container{
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+}
+
+.container-tarjeta{
+  height: 200px;
+  background-color: hsl(278, 68%, 11%);
+  padding: 0.1px;
+}
+
+.tarjeta-front{
+  box-sizing: border-box;
+  height: 140px;
+  width: 250px;
+  background-image: url('./components/images/bg-card-front.png');
+  background-position: center;
+  background-size: cover;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 15px;
   color: white;
+  margin: auto;
+  position: relative;
+  top: 115px;
+  right: 20px;
+  z-index: 2;
+}
+.tarjeta-front img{
+  width: 50px;
+}
+.tarjeta-front-user{
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
 }
 
-.App-link {
-  color: #61dafb;
+.tarjeta-back{
+  height: 140px;
+  width: 250px;
+  background-image: url('./components/images/bg-card-back.png');
+  background-position: center;
+  background-size: cover;
+  border-radius: 5px;
+  position: relative;
+  left: 10px;
+  bottom: 120px;
+  z-index: 1;
+  margin: auto;
+
+}
+.tarjeta-back p{
+  position: relative;
+  color: rgb(255, 255, 255);
+  top: 58px;
+  left: 190px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+
+
+.formulario{
+  width: 300px;
+  margin: auto;
+  padding: 0 20px 20px 20px;
+  margin-top: 80px;
+}
+.div-label-cardholder{
+  margin-bottom: 20px;
+}
+.div-label-cardnumber{
+  margin-bottom: 20px;
+}
+.div-label-cardholder input, .div-label-cardnumber input{
+  width: 275px;
+  border-radius: 5px;
+  border: none;
+  outline: 1px solid hsl(270, 3%, 87%);
+  padding: 10px;
+  font-family: inherit;
+}
+.formulario label{
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+.container-EXP-DATE-CVC{
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.container-EXP-DATE-CVC input{
+  width: 50px;
+  border-radius: 5px;
+  border: 1px solid hsl(270, 3%, 87%);
+  outline: none;
+}
+.div-EXP-DATE input[type='number']{
+  width: 50px;
+  margin-right: 10px;
+  font-family: inherit;
+  padding: 10px;
+}
+.div-EXP-DATE div, .div-CVC div{
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+.div-CVC div{
+  font-weight: 500;
+}
+.div-CVC input[type='number']{
+  width: 80px;
+  font-family: inherit;
+  padding: 10px;
+}
+.formulario input[type='submit']{
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 0 10px 0;
+  font-family: inherit;
+  background-color: hsl(278, 68%, 11%);
+  color: hsl(270, 3%, 87%);
+  font-size: 18px;
+  margin-top: 20px;
+}
+.formulario p{
+  color: hsl(0, 100%, 66%);
+  margin: 0;
+  margin-top: 10px;
+}
+input:focus{
+  border: 1px solid hsl(278, 94%, 30%)
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type=number]{
+  -moz-appearance: textfield;
+}
+
+
+@media screen and (min-width: 1000px){
+
+  body{
+    overflow-y: hidden;
   }
-  to {
-    transform: rotate(360deg);
+  .container{
+    flex-direction: row;
+    height: 100vh;
+    position: relative;
   }
+  .container-tarjeta{
+    width: 400px;
+    height: 100vh;
+  }
+  .tarjeta-front{
+    top:150px;
+    left:150px;
+  }
+  .tarjeta-back{
+    top:160px;
+    left:200px;
+  }
+
+
+
+
+  .formulario{
+    position: relative;
+    margin: 0;
+    left: 20%;
+    top: 165px ;
+    /* top: calc(50vh - 150px) ; */
+  }
+
 }
