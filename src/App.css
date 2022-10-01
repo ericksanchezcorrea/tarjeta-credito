@@ -2,12 +2,13 @@ body{
   font-family: 'Space Grotesk', sans-serif;
   padding: 0;
   margin: 0;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 
 .container{
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .container-tarjeta{
@@ -35,6 +36,7 @@ body{
   right: 20px;
   z-index: 2;
 }
+
 .tarjeta-front img{
   width: 50px;
 }
@@ -63,6 +65,7 @@ body{
   color: rgb(255, 255, 255);
   top: 58px;
   left: 190px;
+  width: 80px;
 }
 
 
