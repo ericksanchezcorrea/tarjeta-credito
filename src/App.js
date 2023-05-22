@@ -4,6 +4,8 @@ import { useForm } from './hooks/useForm';
 // import Modals from './Modals';
 import Modal from './Modal';
 import { useModal } from './hooks/useModal'
+import validationsForm from './helpers/validationsForm';
+import { useState } from 'react';
 
 const initialForm = {
     name:'',
@@ -13,64 +15,122 @@ const initialForm = {
     cvv:''
 }
 
-const ValidationsForm = (form) =>{
-    let errors = {}
-
-    let regexName = /^[A-Za-zÑñÁáÉéÍíÓóÚúÜü\s]+$/;
-
-    if(!form.name.trim()){
-        errors.name = "Can't be blank"
-    } else if(!regexName.test(form.name.trim())){
-        errors.name = "Accepts only letters and spaces and blanks"
-    }
-
-
-    if(!form.numbersCard.trim()){
-        errors.numbersCard = "Can't be blank"
-    } else if(form.numbersCard.trim().length < 16){
-        errors.numbersCard = "Must be 16 digits"
-    }
-
-
-    if(!form.month.trim()){
-        errors.month = "Can't be blank"
-    }else if( form.month.trim() > 12){
-        errors.month = "Check your card"
-    }else if( form.month.trim() < 1){
-        errors.month = "Check your card"
-    }else if(!form.year.trim()){
-        errors.year = "Can't be blank"
-    }else if( form.year.trim() < 22){
-        errors.year = "Check your card"
-    }else if( 31 < form.year.trim()){
-        errors.year = "Check your card"
-    }
-
-
-    if(!form.cvv.trim()){
-        errors.cvv = "Can't be blank"
-    }else if(form.cvv.length !== 3){
-        errors.cvv = "Must be 3 digits"
-    }
-
-    return errors
-}
-
 
 function App() {
 
     const [isOpen, openModal, closeModal] = useModal(false)
 
-    const {
-         form,
-         errors,
-         handleBlur,
-         handleChange,
-         handleKeyPress,
-         handleSubmit
-    } = useForm(initialForm, ValidationsForm, openModal)
+    // const {
+    //     form,
+    //     errors,
+    //     handleBlur,
+    //     handleChange,
+    //     handleSubmit
+    // } = useForm(initialForm, validationsForm, openModal)
 
-// 
+    const [form, setForm] = useState(initialForm)
+    const [errors, setErrors] = useState({})
+
+
+    const handleChange=(e)=>{
+        let {name, value} = e.target
+   
+        if(name === "name"){
+            if(value.length > 100) value = value.slice(0, 100)
+            setForm({ ...form, name: value });
+        }
+
+
+        if (name === "numbersCard") {
+            let formattedValue = value.replace(/\s/g, ""); // Elimina espacios en blanco existentes en nueva variable
+          
+            const alphanumericRegex = /^[0-9]*$/;   // Verificar si hay caracteres no permitidos
+            if (formattedValue !== "" && !alphanumericRegex.test(formattedValue)) {
+              return;
+            }
+          
+            if (formattedValue.length > 16) {
+              formattedValue = formattedValue.slice(0, 16);
+            }
+          
+            let newValue = "";
+            for (let i = 0; i < formattedValue.length; i++) {
+              if (i > 0 && i % 4 === 0) {
+                newValue += " "; // Agregar espacio cada 4 caracteres
+              }
+              newValue += formattedValue[i];
+            }
+          
+            setForm({ ...form, numbersCard: newValue });
+        }
+          
+          
+
+        if (name === "month") {
+            if(value.length > 2) value = value.slice(0,2)
+
+            const numericValue = value.replace(/\s/g,"").replace(/\D/g,"");
+        
+            if (numericValue !== value) {
+              setForm({ ...form, month: numericValue });
+              return
+            }
+        
+            setForm({ ...form, month: value });
+        }
+
+
+        if(name === "year"){
+            if(value.length > 2) value = value.slice(0,2)
+
+            const numericValue = value.replace(/\s/g,"").replace(/\D/g,"");
+        
+            if (numericValue !== value) {
+              setForm({ ...form, year: numericValue });
+              return
+            }
+        
+            setForm({ ...form, year: value });
+        }
+
+
+        if(name === "cvv"){
+            if(value.length > 2) value = value.slice(0,3)
+
+            const numericValue = value.replace(/\s/g,"").replace(/\D/g,"");
+        
+            if (numericValue !== value) {
+              setForm({ ...form, cvv: numericValue });
+              return
+            }
+        
+            setForm({ ...form, cvv: value });
+
+        }
+    }
+
+    const handleBlur = (e) => {
+        const { name } = e.target;
+        const fieldError = validationsForm(form)[name];
+      
+        setErrors({
+          ...errors,
+          [name]: fieldError,
+        });
+      };
+
+    
+    const handleSubmit=(e)=>{
+        e.preventDefault()
+        const newErrors = validationsForm(form);
+        setErrors(newErrors);
+        if (Object.keys(newErrors).length === 0) {
+            setForm(initialForm)
+            setErrors({})
+            openModal()
+        }
+    }
+
   return (
     <div className="App" >
         <Modal isOpen={isOpen}  closeModal={closeModal}/>
@@ -111,14 +171,14 @@ function App() {
                     <input type="text" autoComplete='off' placeholder='e.g Erick Sánchez' name='name' value={form.name}
                     onChange={handleChange} onBlur={handleBlur} />
 
+
                     {errors.name && <p> {errors.name} </p>  }
 
                 </div>
 
                 <div className='div-label-cardnumber'>
                     <label> CARD NUMBER</label>
-                    <input type="number" placeholder='e.g 1234 5678 9123 0000' name='numbersCard'value={form.numbersCard}
-                    onKeyPress={handleKeyPress('numbersCard', form.numbersCard, 16)}
+                    <input type="text" placeholder='e.g 1234 5678 9123 0000' name='numbersCard'value={form.numbersCard}
                     onChange={handleChange}  onBlur={handleBlur} />
 
                     {errors.numbersCard && <p>{errors.numbersCard}</p>  }
@@ -128,13 +188,11 @@ function App() {
                 <div className='container-EXP-DATE-CVC'>
                     <div className='div-EXP-DATE'>
                         <div >EXP. DATE (MM/YY)</div>
-                            <input type="number" placeholder='MM' name='month'value={form.month}
-                            onKeyPress={handleKeyPress('month', form.month, 2)}
+                            <input type="text" placeholder='MM' name='month'value={form.month}
                             onChange={handleChange} onBlur={handleBlur} /> 
 
                 
-                            <input type="number" placeholder='YY' name='year' value={form.year}
-                            onKeyPress={handleKeyPress('year', form.year, 2)}
+                            <input type="text" placeholder='YY' name='year' value={form.year}
                             onChange={handleChange}  onBlur={handleBlur}/>
                             
                     {errors.year ? <p>{errors.year}</p> : <p>{errors.month}</p> }
@@ -142,8 +200,7 @@ function App() {
                     </div>
                     <div className='div-CVC'>
                         <div>CVC</div>
-                        <input type="number" placeholder='e.g.123' maxLength={3} name='cvv' value={form.cvv}
-                        onKeyPress={handleKeyPress('cvv', form.cvv, 3)}
+                        <input type="text" placeholder='e.g.123' maxLength={3} name='cvv' value={form.cvv}
                         onChange={handleChange}  onBlur={handleBlur}/>
 
                     {errors.cvv && <p>{errors.cvv}</p>  }
